@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Maps with Shapefile Polygon</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA1oyZjWlRfRSECC-GtBL2-JR-ioMW70pc&libraries=places,geometry"></script>
+    <script src="https://unpkg.com/@turf/turf/turf.min.js"></script>
+</head>
+<body>
+    <main>
+        <div id="map"></div>
+
+        <!-- Elemento de busca centralizado -->
+        <nav id="controls">
+            <input type="text" id="address" placeholder="Enter an address in Rio Grande do Sul/Brazil">
+            <button id="search" onclick="geocodeAddress()">Search</button>
+        </nav>
+
+        <!-- Botão com a imagem de camadas -->
+        <button id="layer-button" class="button-with-tooltip">
+            <img src="layer_v2.png" alt="Camadas">
+            <span class="button-text-right">Layers</span>
+        </button>
+
+        <!-- Botão: Instruções -->
+        <button id="instructions-button" class="button-with-tooltip">
+            <img src="instructions.png" alt="Instruções">
+            <span class="button-text-right">Instructions</span>
+        </button>
+
+        <!-- Botão com a imagem point.png -->
+        <button id="point-button" class="button-with-tooltip">
+            <img src="point.png" alt="Point">
+            <span class="button-text-right">Point Information</span>
+        </button>
+
+        <!-- Botão com a imagem opacity.png e texto oculto -->
+        <button id="opacity-button" class="button-with-tooltip">
+            <img src="opacity.png" alt="Opacidade">
+            <span class="button-text-right">opacity</span>
+        </button>
+
+        <!-- Menu suspenso para as camadas -->
+        <div id="layer-menu" class="layer-menu" style="display: none;">
+
+            <!-- Título do Menu -->
+            <h3 class="menu-title">Layers Control</h3>
+            <!-- Seção de Toggle-switches -->
+            <div id="toggle-switches">
+                <!-- Camada: Hospitais -->
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleHospitals" onchange="toggleHospitalsLayer()">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Hospitals of Porto Alegre City</span>
+                </div>
+
+                <!-- Camada: Mapbiomas RS -->
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleMapbiomas" onchange="toggleMapbiomasLayer()">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Land Use</span>
+                </div>            
+
+                <!-- Camada: Unidades de Conservação -->
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleUcRs" onchange="toggleUcRsLayer()">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Conservation Units</span>
+                </div>
+
+                <!-- Camada: Probabilidade de Enchente -->
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleWMS" onchange="toggleWMSLayer()">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Flood Probability</span>
+                </div>
+
+                <!-- Camada: Elevação -->
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleElevacao" onchange="toggleElevacaoLayer()">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Elevation</span>
+                </div>
+
+                <!-- Camada: Mancha de Enchente (GeoJSON) -->
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleGeoJSON" onchange="toggleGeoJSONLayer()">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Flood Spot</span>
+                </div>
+
+                <!-- Camada: Precipitação -->
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="togglePrecipitacao" onchange="togglePrecipitacaoLayer()">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Precipitation</span>
+                </div>
+                
+                <!-- Novo Toggle Switch: Flood Data: Limite RS -->
+                <div class="toggle-container">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggleFloodData" onchange="toggleFloodDataLayer()">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Limits of Rio Grande do Sul/Brazil</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Controles de Opacidade -->
+        <div id="opacity-controls" class="opacity-controls" style="display: none;">
+
+            <h3 class="menu-title">Opacity Control</h3>
+            
+            <!-- Opacidade: Mapbiomas RS -->
+            <div class="opacity-container">
+                <label for="mapbiomasOpacity">Land Use</label>
+                <input type="range" id="mapbiomasOpacity" min="0" max="1" step="0.1" value="0.6" onchange="changeMapbiomasOpacity()" style="width: 100px;">
+            </div>            
+
+            <!-- Opacidade: Unidades de Conservação -->
+            <div class="opacity-container">
+                <label for="ucRsOpacity">Conservation Units</label>
+                <input type="range" id="ucRsOpacity" min="0" max="1" step="0.1" value="0.6" onchange="changeUcRsOpacity()" style="width: 100px;">
+            </div>
+
+            <!-- Opacidade: Probabilidade de Enchente -->
+            <div class="opacity-container">
+                <label for="wmsOpacity">Flood Probability</label>
+                <input type="range" id="wmsOpacity" min="0" max="1" step="0.1" value="0.6" onchange="changeWMSOpacity()" style="width: 100px;">
+            </div>
+
+            <!-- Opacidade: Elevação -->
+            <div class="opacity-container">
+                <label for="elevacaoOpacity">Elevation</label>
+                <input type="range" id="elevacaoOpacity" min="0" max="1" step="0.1" value="0.6" onchange="changeElevacaoOpacity()" style="width: 100px;">
+            </div>
+
+            <!-- Opacidade: Mancha de Enchente (GeoJSON) -->
+            <div class="opacity-container">
+                <label for="geoJsonOpacity">Flood Spot</label>
+                <input type="range" id="geoJsonOpacity" min="0" max="1" step="0.1" value="0.5" onchange="changeGeoJSONOpacity()" style="width: 100px;">
+            </div>
+
+            <!-- Opacidade: Precipitação -->
+            <div class="opacity-container">
+                <label for="precipitacaoOpacity">Precipitation</label>
+                <input type="range" id="precipitacaoOpacity" min="0" max="1" step="0.1" value="0.6" onchange="changePrecipitacaoOpacity()" style="width: 100px;">
+            </div>
+            
+        </div>
+
+        
+        <!-- Adicionando a escala de cores -->
+        <div id="color-scale">
+
+            <!-- Título 'Legend' -->
+            <h3 class="menu-subtitle">Legend</h3>
+
+            <h4 class="menu-title-legend">Flood Probability</h4>
+            <div id="color-bar"></div>
+            
+            <div id="color-labels">
+                <span>0%</span>
+                <span>50%</span>
+                <span>100%</span>
+            </div>
+        </div>
+
+        <div id="color-scale-geo">
+            <h4 class="menu-title-legend">Elevation</h4>
+            <div id="color-bar-geo"></div>
+            <div id="color-labels-geo">
+                <span>0 m</span>
+                <span>100 m</span>
+                <span>1200 m</span>
+            </div>
+        </div>
+
+        <!-- Nova escala de cores para precipitação -->
+        <div id="color-scale-precipitation">
+            <h4 class="menu-title-legend">Precipitation</h4>
+            <div id="color-bar-precipitation"></div>
+            <div id="color-labels-precipitation">
+                <span>18 mm</span>
+                <span>21 mm</span>
+                <span>25 mm</span>
+            </div>
+        </div>
+
+        <!-- Nova escala de cores categórica -->
+        <div id="color-scale-categorical">
+            <h4 class="menu-title-legend">Land Use</h4>
+            <div id="color-labels-categorical">
+                <div class="color-entry" style="background-color: #1f8d49;">Forest Formation</div>
+                <div class="color-entry" style="background-color: #7a5900;">Forest Plantation </div>
+                <div class="color-entry" style="background-color: #519799;">Wetland</div>
+                <div class="color-entry" style="background-color: #d6bc74;">Grassland</div>
+                <div class="color-entry" style="background-color: #edde8e;">Pasture</div>
+                <div class="color-entry" style="background-color: #ffefc3;">Mosaic of Uses</div>
+                <div class="color-entry" style="background-color: #ffa07a;">Beach, Dune and Sand Spot</div>
+                <div class="color-entry" style="background-color: #d4271e;">Urban Area</div>
+                <div class="color-entry" style="background-color: #db4d4f;">Other non Vegetated Areas</div>
+                <div class="color-entry" style="background-color: #ffaa5f;">Rocky Outcrop</div>
+                <div class="color-entry" style="background-color: #9c0027;">Mining</div>
+                <div class="color-entry" style="background-color: #091077;">Aquaculture</div>
+                <div class="color-entry" style="background-color: #2532e4;">River, Lake and Ocean</div>
+                <div class="color-entry" style="background-color: #f5b3c8;">Soybean</div>
+                <div class="color-entry" style="background-color: #c71585;">Rice</div>
+                <div class="color-entry" style="background-color: #f54ca9;">Other Temporary Crops</div>
+                <div class="color-entry" style="background-color: #02d659;">Wooded Sandbank Vegetation</div>
+                <div class="color-entry" style="background-color: #ad5100;">Herbaceous Sandbank Vegetation</div>
+            </div>
+        </div>
+
+        <!-- Nova Caixa de Instruções -->
+        <div id="instructions-box" style="display: none;">
+            <h3 class="instructions-title">Website Usage Instructions</h3>
+            <p>
+                Click on <img src="point.png" alt="Modo de Ponto" class="instruction-icon"> to activate the add mode <img src="marker.png" alt="Marcador" class="instruction-icon"> on the map, click this icon again to return to search mode.
+            </p>
+            <p>
+                Click on <img src="layer_v2.png" alt="Menu de Camadas" class="instruction-icon"> to display the layers menu, in this menu you can choose the maps that will be displayed.
+            </p>
+            <p>
+                Click on <img src="opacity.png" alt="Controle de Opacidade" class="instruction-icon"> to display the layer opacity control menu.
+            </p>
+            <p>
+                It is possible to add a <img src="marker.png" alt="Marcador" class="instruction-icon"> typing in the text box an address within the state of Rio Grande do Sul/Brazil.
+            </p>
+            <p>
+                Hover over the <img src="marker.png" alt="Marcador" class="instruction-icon"> to display information about the selected point.
+            </p>
+        </div>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

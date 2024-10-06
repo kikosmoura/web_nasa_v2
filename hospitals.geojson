@@ -1,0 +1,18 @@
+{
+"type": "FeatureCollection",
+"name": "flood_data:hospitais",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "gml_id": "hospitais.1", "hospital": "AESC HOSPITAL SANTA ANA", "lat": -30.086382332093478, "lon": -51.206923377031572 }, "geometry": { "type": "Point", "coordinates": [ -51.20692338, -30.08638233 ] } },
+{ "type": "Feature", "properties": { "gml_id": "hospitais.2", "hospital": "ASSOCIACAO HOSPITALAR VILA NOVA", "lat": -30.119280164262626, "lon": -51.207336393996442 }, "geometry": { "type": "Point", "coordinates": [ -51.20733639, -30.11928016 ] } },
+{ "type": "Feature", "properties": { "gml_id": "hospitais.3", "hospital": "HEPA - HOSPITAL ESPIRITA DE PORTO ALEGRE", "lat": -30.086955828059171, "lon": -51.206311523016161 }, "geometry": { "type": "Point", "coordinates": [ -51.20631152, -30.08695583 ] } },
+{ "type": "Feature", "properties": { "gml_id": "hospitais.4", "hospital": "HOSPITAL BANCO DE OLHOS DE PORTO ALEGRE", "lat": -30.0221883216152, "lon": -51.154168735804092 }, "geometry": { "type": "Point", "coordinates": [ -51.15416874, -30.02218832 ] } },
+{ "type": "Feature", "properties": { "gml_id": "hospitais.5", "hospital": "HOSPITAL BENEFICENCIA PORTUGUESA", "lat": -30.028782374151653, "lon": -51.218327673562655 }, "geometry": { "type": "Point", "coordinates": [ -51.21832767, -30.02878237 ] } },
+{ "type": "Feature", "properties": { "gml_id": "hospitais.6", "hospital": "HOSPITAL DIVINA PROVIDENCIA", "lat": -30.084681202127417, "lon": -51.187915808595704 }, "geometry": { "type": "Point", "coordinates": [ -51.18791581, -30.0846812 ] } },
+{ "type": "Feature", "properties": { "gml_id": "hospitais.7", "hospital": "HOSPITAL INDEPENDENCIA", "lat": -30.060943975509289, "lon": -51.14939236597489 }, "geometry": { "type": "Point", "coordinates": [ -51.14939237, -30.06094398 ] } },
+{ "type": "Feature", "properties": { "gml_id": "hospitais.8", "hospital": "HOSPITAL RESTINGA E EXTREMO SUL", "lat": -30.142410139375375, "lon": -51.128822056167799 }, "geometry": { "type": "Point", "coordinates": [ -51.12882206, -30.14241014 ] } },
+{ "type": "Feature", "properties": { "gml_id": "hospitais.9", "hospital": "HOSPITAL SAO LUCAS DA PUCRS", "lat": -30.055166393459405, "lon": -51.176184782350632 }, "geometry": { "type": "Point", "coordinates": [ -51.17618478, -30.05516639 ] } },
+{ "type": "Feature", "properties": { "gml_id": "hospitais.10", "hospital": "INSTITUTO DE CARDIOLOGIA", "lat": -30.048947213331971, "lon": -51.208965285790391 }, "geometry": { "type": "Point", "coordinates": [ -51.20896529, -30.04894721 ] } },
+{ "type": "Feature", "properties": { "gml_id": "hospitais.11", "hospital": "IRMANDADE DA SANTA CASA DE PORTO ALEGRE", "lat": -30.030875364619412, "lon": -51.221558580022503 }, "geometry": { "type": "Point", "coordinates": [ -51.22155858, -30.03087536 ] } }
+]
+}
